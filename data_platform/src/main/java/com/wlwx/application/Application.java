@@ -23,7 +23,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * spring boot 初始化文件 初始化文件
+ * spring boot 初始化文件初始化文件
  * @author zjj
  * @date 2017年7月11日 下午4:42:48
  */
