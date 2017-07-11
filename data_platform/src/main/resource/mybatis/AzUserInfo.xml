@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wlwx.dao.AzUserInfoMapper">
+	<select id="get" resultType="com.wlwx.model.AzUserInfo" parameterType="String">
+		select * from az_user_info where az_user_id = #{azUserId}
+	</select>
+</mapper>

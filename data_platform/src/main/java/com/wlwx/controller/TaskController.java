@@ -1,0 +1,44 @@
+package com.wlwx.controller;
+
+import com.github.pagehelper.PageInfo;
+import com.wlwx.model.TaskInfo;
+import com.wlwx.service.TaskService;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+/**
+ * 任务列表
+ * @author zjj
+ * @date 2017年7月11日 下午5:08:29
+ */
+@Controller
+@RequestMapping({ "/sms/manage" })
+public class TaskController {
+	private static final Logger LOGGER = Logger.getLogger(TaskController.class);
+
+	@Autowired
+	private TaskService taskService;
+
+	@RequestMapping("/listTasks.json")
+	public @ResponseBody Map<String, Object> listTasks() {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			PageInfo<TaskInfo> pageInfo = this.taskService.listTasks();
+			result.put("success", true);
+			result.put("message", "获取任务列表成功");
+			result.put("pageInfo", pageInfo);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+			result.put("success", false);
+			result.put("message", "获取任务列表失败");
+		}
+		return result;
+	}
+}
