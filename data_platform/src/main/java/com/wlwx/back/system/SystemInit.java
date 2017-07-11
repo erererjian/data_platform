@@ -1,8 +1,10 @@
 package com.wlwx.back.system;
 
 import com.wlwx.back.task.ThreadPoolService;
-import java.util.HashMap;
+
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -13,7 +15,7 @@ import org.apache.log4j.Logger;
 public class SystemInit {
 	public static final Logger LOGGER = Logger.getLogger(SystemInit.class);
 
-	public static Map<String, Object> sessionMap = new HashMap<>();
+	public static Map<String, Object> sessionMap = new ConcurrentHashMap<>();
 	public static ThreadPoolService taskService;
 
 	/**

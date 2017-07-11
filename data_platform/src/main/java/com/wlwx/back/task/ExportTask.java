@@ -147,14 +147,11 @@ public class ExportTask extends Task {
 					taskInfoMapper.update(params);
 					break;
 				}
-
 				Thread.sleep(1000);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			setState(TaskInfo.TERMINATED);
 			setCourse("扫描任务出现错误：" + e);
-
 			LOGGER.error("ExportTask deal() error:" + e.getMessage());
 		}
 	}

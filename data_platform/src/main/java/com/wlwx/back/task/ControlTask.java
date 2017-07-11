@@ -66,12 +66,8 @@ public class ControlTask {
 	 */
 	public static ExportTask getTask(String taskId) {
 		ExportTask exportTask = null;
-		try {
-			exportTask = (ExportTask) SystemInit.taskService.getTaskQueue()
-					.getTaskById(taskId);
-		} catch (Exception e1) {
-			LOGGER.error("ControlTask getTask() error:" + e1.getMessage());
-		}
+		exportTask = (ExportTask) SystemInit.taskService.getTaskQueue()
+			.getTaskById(taskId);
 		return exportTask;
 	}
 

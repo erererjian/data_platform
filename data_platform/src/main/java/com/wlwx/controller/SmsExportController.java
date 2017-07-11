@@ -5,11 +5,11 @@ import com.alibaba.fastjson.TypeReference;
 import com.wlwx.back.system.SystemInit;
 import com.wlwx.back.task.ControlTask;
 import com.wlwx.back.task.Task;
-import com.wlwx.back.util.PlatformUtil;
 import com.wlwx.back.util.ResultMsg;
 import com.wlwx.service.SmsExportService;
 import com.wlwx.service.UserService;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -112,20 +112,18 @@ public class SmsExportController {
 	@RequestMapping(value = { "/runThreadNum" }, method = RequestMethod.POST)
 	public @ResponseBody String getRunThreadNum() {
 		StringBuffer sb = new StringBuffer();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+		
 		List<Task> queue = SystemInit.taskService.getTaskQueue().getQueue();
 		for (int i = 0; i < queue.size(); i++) {
 			sb.append("任务ID：" + ((Task) queue.get(i)).getTask_id() + " | ");
-			sb.append("任务状态："
-					+ (((Task) queue.get(i)).getState() == 1 ? "新建" : "运行")
-					+ " | ");
+			sb.append("任务状态：" + (((Task) queue.get(i)).getState() == 1 ? "新建" : "运行")+ " | ");
 			sb.append("优先级：" + ((Task) queue.get(i)).getPriority() + " | ");
-			sb.append("创建时间："
-					+ PlatformUtil.SDF_STANDARD.format(((Task) queue.get(i))
-							.getCreate_time()) + " | ");
+			sb.append("创建时间：" + sdf.format(((Task) queue.get(i)).getCreate_time()) + " | ");
 			sb.append("模板ID：" + ((Task) queue.get(i)).getModel_id() + " | ");
 			sb.append("用户ID：" + ((Task) queue.get(i)).getUser_id() + "\n");
 		}
-
 		return sb.toString();
 	}
 }

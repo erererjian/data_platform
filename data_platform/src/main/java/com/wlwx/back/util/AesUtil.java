@@ -76,9 +76,10 @@ public class AesUtil {
 				LOGGER.info(e);
 			}
 		}
-		
-		return result.replaceAll("\r\n", "").replaceAll("\r", "")
-				.replaceAll("\n", "");
+		if (str != null) 
+			return result.replaceAll("\r\n", "").replaceAll("\r", "").replaceAll("\n", "");
+		else 
+			return str;
 	}
 
 	public static String ebotongDecrypto(String str) {

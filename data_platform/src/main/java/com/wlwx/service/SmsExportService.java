@@ -14,6 +14,7 @@ import com.wlwx.model.ModelInfo;
 import com.wlwx.model.TaskInfo;
 import com.wlwx.model.UserInfo;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -39,7 +40,7 @@ public class SmsExportService {
 		ResultMsg resultMsg = null;
 		try {
 			UserInfo userInfo = (UserInfo) map.get("user_info");
-
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 			map.remove("user_info");
 			map.remove("custom_info");
 			if (userInfo != null) {
@@ -54,7 +55,7 @@ public class SmsExportService {
 				String taskParam = PlatformUtil.mapToJson(map);
 				map.put("user_id", userInfo.getUser_id());
 				map.put("user_source", userInfo.getCustom_source());
-				map.put("create_time", PlatformUtil.SDF_STRING.format(createTime));
+				map.put("create_time", sdf.format(createTime));
 				map.put("useExecutor", AzkabanUtil.HADOOP03);
 
 				ExportTask exportTask = new ExportTask();

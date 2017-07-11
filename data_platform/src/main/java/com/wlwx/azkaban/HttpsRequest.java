@@ -13,6 +13,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.apache.log4j.Logger;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -25,6 +26,9 @@ import org.springframework.web.client.RestTemplate;
  * @date 2017年7月11日 下午4:53:41
  */
 public class HttpsRequest {
+	
+	private static final Logger LOGGER = Logger.getLogger(HttpsRequest.class);
+	
 	static {
 		disableSslVerification();
 	}
@@ -56,9 +60,9 @@ public class HttpsRequest {
 			};
 			HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		} catch (KeyManagementException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 

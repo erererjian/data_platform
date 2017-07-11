@@ -84,7 +84,6 @@ public class Application {
 	 * @return
 	 */
 	public static PageHelper pageHelper() {
-		System.out.println("MyBatisConfiguration.pageHelper()");
 		PageHelper pageHelper = new PageHelper();
 		Properties p = new Properties();
 		p.setProperty("offsetAsPageNum", "true");
@@ -101,7 +100,6 @@ public class Application {
 	 */
 	@Bean
 	public int systemInit() {
-		System.out.println("systemInit");
 		SystemInit.start();
 		return 0;
 	}
