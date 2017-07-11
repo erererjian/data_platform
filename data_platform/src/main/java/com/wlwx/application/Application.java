@@ -61,7 +61,7 @@ public class Application {
 		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 		sqlSessionFactoryBean.setDataSource(dataSource());
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-		Interceptor[] plugins = { pageHelper() };
+		Interceptor[] plugins = {pageHelper()};
 		sqlSessionFactoryBean.setPlugins(plugins);
 		sqlSessionFactoryBean.setMapperLocations(resolver
 				.getResources("classpath:/mybatis/*.xml"));
