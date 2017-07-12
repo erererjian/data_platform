@@ -3,6 +3,7 @@ package com.wlwx.back.task;
 import com.wlwx.back.system.SystemInit;
 import com.wlwx.model.TaskInfo;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +13,7 @@ import org.apache.log4j.Logger;
 public class TaskQueue {
 	public static final Logger LOGGER = Logger.getLogger(TaskQueue.class);
 
-	private List<Task> queue = new LinkedList<>();
+	private List<Task> queue = Collections.synchronizedList(new LinkedList<Task>());
 
 	public List<Task> getQueue() {
 		return this.queue;

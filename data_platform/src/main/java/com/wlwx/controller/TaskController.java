@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @date 2017年7月11日 下午5:08:29
  */
 @Controller
-@RequestMapping({ "/sms/manage" })
+@RequestMapping("/sms/manage")
 public class TaskController {
 	private static final Logger LOGGER = Logger.getLogger(TaskController.class);
 
