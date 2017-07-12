@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/sms/export")
 public class SmsExportController {
+	
 	private static final Logger LOGGER = Logger.getLogger(SmsExportService.class);
 
 	@Autowired
@@ -128,6 +129,28 @@ public class SmsExportController {
 		return result;
 	}
 
+	/**
+	 * 获取任务详情
+	 * @date 2017年7月12日 上午11:14:25
+	 * @param taskId
+	 * @return
+	 */
+	@RequestMapping(value = {"/getTask.json"}, method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> getTask(String taskId){
+		Map<String, Object> result = new HashMap<>();
+		
+		try {
+			TaskInfo taskInfo = taskService.getById(taskId);
+			result.put("success", true);
+			result.put("message", "获取任务详情成功");
+			result.put("data", taskInfo);
+		} catch (Exception e) {
+			result.put("success", false);
+			result.put("message", "获取任务详情失败");
+		}
+		
+		return result;
+	}
 	
 	/**
 	 * 测试使用
