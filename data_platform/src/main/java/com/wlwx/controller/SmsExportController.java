@@ -64,7 +64,7 @@ public class SmsExportController {
 					});
 
 			String customInfo = (String) map.get("custom_info");
-			ResultMsg resultMsg = userService.checkCustom(customInfo);
+			ResultMsg resultMsg = userService.checkCustom(customInfo);//验证用户信息
 
 			if (resultMsg.isSuccess()) {
 				map.put("user_info", resultMsg.getObj());
@@ -91,35 +91,52 @@ public class SmsExportController {
 	/**
 	 * 取消任务
 	 * @date 2017年7月11日 下午5:08:00
-	 * @param taskId
+	 * @param request
 	 * @return
 	 */
 	@RequestMapping(value = {"/cancelTask.json"}, method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object> cancelTask(String taskId) {
+	public @ResponseBody Map<String, Object> cancelTask(HttpServletRequest request) {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			TaskInfo taskInfo = taskService.getById(taskId);//根据任务ID查找任务
-			if (taskInfo != null) {
-				int taskStatus = taskInfo.getTask_status();
-				if (TaskInfo.NEW == taskStatus ||
-						TaskInfo.WAIT == taskStatus ||
-						TaskInfo.RUNNING == taskStatus) {//只有新建、等待或者正在运行的任务才能取消
-					ResultMsg resultMsg = ControlTask.cancelTask(taskId);
-					if (resultMsg.isSuccess()) {//取消任务成功
-						taskService.update(taskInfo);// 修改任务状态
-						result.put("success", true);
-						result.put("message", "取消任务成功");
-					} else {//取消任务失败
+			String params = request.getParameter("params");
+
+			Map<String, Object> map = JSON.parseObject(params,
+					new TypeReference<Map<String, Object>>() {
+					});
+
+			String customInfo = map.get("custom_info").toString();
+			ResultMsg resultMsg = userService.checkCustom(customInfo);//验证用户信息
+
+			if (resultMsg.isSuccess()) {
+				String taskId = map.get("task_id").toString();
+				TaskInfo taskInfo = taskService.getById(taskId);//根据任务ID查找任务
+				if (taskInfo != null) {
+					int taskStatus = taskInfo.getTask_status();
+					if (TaskInfo.NEW == taskStatus ||
+							TaskInfo.WAIT == taskStatus ||
+							TaskInfo.RUNNING == taskStatus) {//只有新建、等待或者正在运行的任务才能取消
+						
+						ResultMsg rm = ControlTask.cancelTask(taskId);
+						
+						if (rm.isSuccess()) {//取消任务成功
+							taskService.update(taskInfo);// 修改任务状态
+							result.put("success", true);
+							result.put("message", "取消任务成功");
+						} else {//取消任务失败
+							result.put("success", false);
+							result.put("message", rm.getMsg());
+						}
+					} else {
 						result.put("success", false);
-						result.put("message", resultMsg.getMsg());
+						result.put("message", PlatformUtil.statusToStr(taskStatus)+"的任务不能取消");
 					}
 				} else {
 					result.put("success", false);
-					result.put("message", PlatformUtil.statusToStr(taskStatus)+"的任务不能取消");
+					result.put("message", "该任务不存在");
 				}
 			} else {
 				result.put("success", false);
-				result.put("message", "该任务不存在");
+				result.put("message", resultMsg.getMsg());
 			}
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
@@ -132,18 +149,33 @@ public class SmsExportController {
 	/**
 	 * 获取任务详情
 	 * @date 2017年7月12日 上午11:14:25
-	 * @param taskId
+	 * @param request
 	 * @return
 	 */
 	@RequestMapping(value = {"/getTask.json"}, method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object> getTask(String taskId){
+	public @ResponseBody Map<String, Object> getTask(HttpServletRequest request){
 		Map<String, Object> result = new HashMap<>();
 		
 		try {
-			TaskInfo taskInfo = taskService.getById(taskId);
-			result.put("success", true);
-			result.put("message", "获取任务详情成功");
-			result.put("data", taskInfo);
+			String params = request.getParameter("params");
+
+			Map<String, Object> map = JSON.parseObject(params,
+					new TypeReference<Map<String, Object>>() {
+					});
+
+			String customInfo = map.get("custom_info").toString();
+			ResultMsg resultMsg = userService.checkCustom(customInfo);//验证用户信息
+
+			if (resultMsg.isSuccess()) {
+				String taskId = map.get("task_id").toString();
+				TaskInfo taskInfo = taskService.getById(taskId);
+				result.put("success", true);
+				result.put("message", "获取任务详情成功");
+				result.put("data", taskInfo);
+			} else {
+				result.put("success", false);
+				result.put("message", resultMsg.getMsg());
+			}
 		} catch (Exception e) {
 			result.put("success", false);
 			result.put("message", "获取任务详情失败");

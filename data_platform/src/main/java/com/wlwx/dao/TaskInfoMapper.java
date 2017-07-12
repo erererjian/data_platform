@@ -9,10 +9,11 @@ public interface TaskInfoMapper {
 	
 	/**
 	 * 查询任务列表
+	 * @param map 
 	 * @date 2017年7月12日 上午10:31:16
 	 * @return
 	 */
-	public List<TaskInfo> listTasks();
+	public List<TaskInfo> listTasks(Map<String, Object> map);
 
 	/**
 	 * 新增任务

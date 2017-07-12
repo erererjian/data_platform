@@ -25,12 +25,21 @@ public class TaskService {
 
 	/**
 	 * 查询任务列表
+	 * @param map 
 	 * @date 2017年7月12日 上午10:29:30
 	 * @return
 	 */
-	public PageInfo<TaskInfo> listTasks() {
-		PageHelper.startPage(1, 3);
-		List<TaskInfo> taskList = taskInfoMapper.listTasks();
+	public PageInfo<TaskInfo> listTasks(Map<String, Object> map) {
+		int pageNum = 0;
+		int pageSize = 10;
+		if (map.get("page_num") != null) 
+			pageNum = ((Integer) map.get("page_num")).intValue();//第几页
+		if (map.get("page_size") != null) 
+			pageSize = ((Integer) map.get("page_size")).intValue();//每页几条
+		
+		PageHelper.startPage(pageNum, pageSize);
+		
+		List<TaskInfo> taskList = taskInfoMapper.listTasks(map);//查询任务列表
 		PageInfo<TaskInfo> pageInfo = new PageInfo<>(taskList);
 		return pageInfo;
 	}

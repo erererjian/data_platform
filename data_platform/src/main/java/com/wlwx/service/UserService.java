@@ -22,20 +22,23 @@ public class UserService {
 	@Autowired
 	private UserInfoMapper userInfoMapper;
 
+	/**
+	 * 验证用户信息
+	 * @date 2017年7月12日 上午11:46:16
+	 * @param customInfo
+	 * @return
+	 */
 	public ResultMsg checkCustom(String customInfo) {
 		ResultMsg resultMsg = null;
 		try {
 			String decryptCustomInfo = AesUtil.decrypt(customInfo);
-			System.out.println(decryptCustomInfo);
 			Map<String, Object> customInfoMap = JSON.parseObject(
 					decryptCustomInfo,
 					new TypeReference<Map<String, Object>>() {
 					});
 
-			int customUid = ((Integer) customInfoMap.get("custom_uid"))
-					.intValue();
-			int customSource = ((Integer) customInfoMap.get("custom_source"))
-					.intValue();
+			int customUid = ((Integer) customInfoMap.get("custom_uid")).intValue();
+			int customSource = ((Integer) customInfoMap.get("custom_source")).intValue();
 			String userPassword = (String) customInfoMap.get("user_password");
 			Map<String, Object> params = new HashMap<>();
 			params.put("custom_uid", Integer.valueOf(customUid));

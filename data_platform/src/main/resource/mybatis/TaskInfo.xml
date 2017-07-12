@@ -2,10 +2,35 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wlwx.dao.TaskInfoMapper">
 	
-	<select id="listTasks" resultType="com.wlwx.model.TaskInfo">
-		select * from task_info
+	<!-- 查询任务列表 -->
+	<select id="listTasks" parameterType="map" resultType="com.wlwx.model.TaskInfo">
+		select * from task_info where 1 = 1 
+		<if test="task_id != null and task_id != ''"><!-- 任务ID模糊 -->
+			and task_id CONCAT('%',#{task_id},'%')
+		</if>
+		<if test="task_status != null and task_status != ''"><!-- 任务状态 -->
+			and task_status = #{task_status}
+		</if>
+		<if test="start_time != null and start_time != ''"><!-- 创建时间 -->
+			and create_time &gt;= #{start_time}
+		</if>
+		<if test="end_time != null and end_time != ''"><!-- 创建时间 -->
+			and create_time &lt;= #{end_time}
+		</if>
+		<if test="(user_id != null and user_id !='') or (user_source != null and user_source !='')">
+			and user_id in (select user_id from user_info where 1 = 1
+			<if test="user_id != null and user_id !=''"><!-- 所属客户ID -->
+				and custom_uid = #{user_id}
+			</if>
+			<if test="user_source != null and user_source !=''"><!-- 所属客户来源 -->
+				and custom_source = #{user_source}
+			</if>
+			)
+		</if>
+		
 	</select>
 	
+	<!-- 新增任务 -->
 	<insert id="insertTask" parameterType="com.wlwx.model.TaskInfo">
 		insert into task_info(
 			task_id, 
@@ -26,6 +51,7 @@
 			)
 	</insert>
 	
+	<!-- 修改任务 -->
 	<update id="update" parameterType="map">
 		update task_info      
 	    <set>
@@ -66,6 +92,7 @@
 	    where task_id = #{task_id}
 	</update>
 	
+	<!-- 根据任务ID查询任务详情 -->
 	<select id="getById" parameterType="String" resultType="com.wlwx.model.TaskInfo">
 		select * from task_info where task_id = #{taskId}
 	</select>
