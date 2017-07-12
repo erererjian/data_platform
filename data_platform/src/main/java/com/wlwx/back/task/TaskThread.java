@@ -35,7 +35,6 @@ public class TaskThread extends Thread {
 				} catch (InterruptedException e) {
 					LOGGER.error("TaskThread run() InterruptedException]:"
 							+ e.getMessage(), e);
-					continue;
 				}
 			}
 			if (service.getRunThreadNum() > service.getThreadNum()){ //当任务线程数减少时则退出该线程

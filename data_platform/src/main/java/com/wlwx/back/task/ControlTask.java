@@ -25,9 +25,8 @@ public class ControlTask {
 			resultMsg = new ResultMsg(true, "添加成功，马上执行");
 		else if (taskFlag == -2)
 			resultMsg = new ResultMsg(true, "添加成功，等待执行！");
-		else {
+		else 
 			resultMsg = new ResultMsg(false, "添加失败，任务已存在");
-		}
 		return resultMsg;
 	}
 
