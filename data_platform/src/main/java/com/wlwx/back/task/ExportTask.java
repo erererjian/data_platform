@@ -4,7 +4,6 @@ import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.wlwx.azkaban.AzkabanUtil;
 import com.wlwx.back.system.SystemInit;
-import com.wlwx.back.util.AesUtil;
 import com.wlwx.back.util.PlatformUtil;
 import com.wlwx.dao.TaskInfoMapper;
 import com.wlwx.model.AzUserInfo;
@@ -71,14 +70,8 @@ public class ExportTask extends Task {
 				if (jsonObject.get("error") != null) {//执行任务失败
 					if (!"session".equals(jsonObject.getString("error")))//如果不是因为session原因错误。直接退出任务
 						break;
-					
 					AzUserInfo azUserInfo = getAzUserInfo();
-					JSONObject jo = AzkabanUtil.actionLogin(azUserInfo.getAz_user_name(),//重新登录
-							AesUtil.decrypt(azUserInfo.getAz_user_password()));
-					System.out.println("jo = " + jo);
-					if ((jo.get("error") == null) && ("success".equals(jo.getString("status")))) {//设置新的sessionID
-						SystemInit.sessionMap.put(getUser_id(),jo.getString("session.id"));
-					}
+					PlatformUtil.resetSession(azUserInfo, getUser_id());//重置sessionID
 				} else {//任务执行成功
 					setExec_id(jsonObject.getLongValue("execid"));
 					success = true;

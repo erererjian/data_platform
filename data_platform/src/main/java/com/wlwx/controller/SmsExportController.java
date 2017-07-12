@@ -5,8 +5,11 @@ import com.alibaba.fastjson.TypeReference;
 import com.wlwx.back.system.SystemInit;
 import com.wlwx.back.task.ControlTask;
 import com.wlwx.back.task.Task;
+import com.wlwx.back.util.PlatformUtil;
 import com.wlwx.back.util.ResultMsg;
+import com.wlwx.model.TaskInfo;
 import com.wlwx.service.SmsExportService;
+import com.wlwx.service.TaskService;
 import com.wlwx.service.UserService;
 
 import java.text.SimpleDateFormat;
@@ -38,6 +41,9 @@ public class SmsExportController {
 
 	@Autowired
 	private SmsExportService smsExportService;
+	
+	@Autowired
+	private TaskService taskService;
 
 	/**
 	 * 创建数据导出任务
@@ -87,17 +93,36 @@ public class SmsExportController {
 	 * @param taskId
 	 * @return
 	 */
-	@RequestMapping(value = { "/cancelTask.json" }, method = RequestMethod.POST)
-	public @ResponseBody
-	Map<String, Object> cancelTask(String taskId) {
+	@RequestMapping(value = {"/cancelTask.json"}, method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> cancelTask(String taskId) {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			ControlTask.cancelTask(taskId);
-			result.put("success", Boolean.valueOf(true));
-			result.put("message", "取消任务成功");
+			TaskInfo taskInfo = taskService.getById(taskId);//根据任务ID查找任务
+			if (taskInfo != null) {
+				int taskStatus = taskInfo.getTask_status();
+				if (TaskInfo.NEW == taskStatus ||
+						TaskInfo.WAIT == taskStatus ||
+						TaskInfo.RUNNING == taskStatus) {//只有新建、等待或者正在运行的任务才能取消
+					ResultMsg resultMsg = ControlTask.cancelTask(taskId);
+					if (resultMsg.isSuccess()) {//取消任务成功
+						taskService.update(taskInfo);// 修改任务状态
+						result.put("success", true);
+						result.put("message", "取消任务成功");
+					} else {//取消任务失败
+						result.put("success", false);
+						result.put("message", resultMsg.getMsg());
+					}
+				} else {
+					result.put("success", false);
+					result.put("message", PlatformUtil.statusToStr(taskStatus)+"的任务不能取消");
+				}
+			} else {
+				result.put("success", false);
+				result.put("message", "该任务不存在");
+			}
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
-			result.put("success", Boolean.valueOf(false));
+			result.put("success", false);
 			result.put("message", "取消任务失败");
 		}
 		return result;

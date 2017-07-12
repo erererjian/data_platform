@@ -66,4 +66,8 @@
 	    where task_id = #{task_id}
 	</update>
 	
+	<select id="getById" parameterType="String" resultType="com.wlwx.model.TaskInfo">
+		select * from task_info where task_id = #{taskId}
+	</select>
+	
 </mapper>
