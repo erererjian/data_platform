@@ -87,4 +87,70 @@ public class TaskPriorityController {
 		
 		return result;
 	}
+	
+	
+	/**
+	 * 调整任务优先级
+	 * @date 2017年7月13日 上午8:47:59
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = {"/moveTask.json"}, method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> moveTask(HttpServletRequest request){
+		Map<String, Object> result = new HashMap<>();
+		try {
+			String params = request.getParameter("params");
+
+			Map<String, Object> map = JSON.parseObject(params,
+					new TypeReference<Map<String, Object>>() {
+					});
+
+			String customInfo = map.get("custom_info").toString();
+			ResultMsg resultMsg = userService.checkCustom(customInfo);//验证用户信息
+
+			if (resultMsg.isSuccess()) {
+				if (map.get("source_task_id") != null 
+						&& map.get("dest_task_id") != null) {//判断源目标位置与任务位置不得为空
+					String sourceTaskId = map.get("source_task_id").toString();
+					String destTaskId = map.get("dest_task_id").toString();
+					
+					int sourceIndex = -1;
+					int destIndex = -1;
+					
+					List<Task> tasks = SystemInit.taskService.getTaskQueue().getQueue();
+					
+					for (int i = 0; i < tasks.size(); i++) {
+						if (TaskInfo.NEW == tasks.get(i).getState()) {
+							String taskId = tasks.get(i).getTask_id();
+							if (sourceTaskId.equals(taskId)) //获取源任务的位置
+								sourceIndex = i;
+							if (destTaskId.equals(taskId)) //获取目标任务的位置
+								destIndex = i;
+						}
+					}
+					if (sourceIndex != -1 && destIndex != -1) {
+						SystemInit.taskService.getTaskQueue().getQueue().add(destIndex,
+								SystemInit.taskService.getTaskQueue().getQueue().remove(sourceIndex));
+						result.put("success", true);
+						result.put("message", "调整任务优先级成功");
+					} else {
+						result.put("success", false);
+						result.put("message", "任务已经正在运行或者完成，不得调整。");
+					}
+				} else {
+					result.put("success", false);
+					result.put("message", "源任务ID和目标任务ID不得为空");
+				}
+			} else {
+				result.put("success", false);
+				result.put("message", resultMsg.getMsg());
+			}
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+			result.put("success", false);
+			result.put("message", "调整任务优先级失败");
+		}
+		
+		return result;
+	}
 }
