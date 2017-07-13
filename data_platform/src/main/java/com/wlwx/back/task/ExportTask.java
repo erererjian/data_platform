@@ -136,7 +136,7 @@ public class ExportTask extends Task {
 									+ File.separator + getUser_id()
 									+ File.separator + modelInfo.getModel_name()
 									+ File.separator
-									+ getTask_param().get("create_time").toString()
+									+ getTask_param().get("task_id").toString()
 									+ File.separator + "download" + File.separator
 									+ modelInfo.getModel_name() + ".zip";
 							params.put("task_status", TaskInfo.SUCCESS);
