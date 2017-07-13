@@ -22,14 +22,17 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service("smsExportService")
 public class SmsExportService {
 	private static final Logger LOGGER = Logger
 			.getLogger(SmsExportService.class);
 
 	@Autowired
+	private TaskService taskService;
+	
+	@Autowired
 	private TaskInfoMapper taskInfoMapper;
-
+	
 	@Autowired
 	private AzUserInfoMapper azUserInfoMapper;
 
@@ -57,6 +60,7 @@ public class SmsExportService {
 				map.put("user_source", userInfo.getCustom_source());
 				map.put("create_time", sdf.format(createTime));
 				map.put("useExecutor", AzkabanUtil.HADOOP03);
+				map.put("task_id", taskId);
 
 				ExportTask exportTask = new ExportTask();
 				exportTask.setTask_id(taskId);
@@ -66,7 +70,8 @@ public class SmsExportService {
 				exportTask.setModel_id(modelId);
 				exportTask.setState(TaskInfo.NEW);
 				exportTask.setTask_param(map);
-				exportTask.setTaskInfoMapper(taskInfoMapper);
+				exportTask.setTaskService(taskService);
+				exportTask.setNew(true);//用于区分是否是用户添加的
 
 				AzUserInfo azUserInfo = azUserInfoMapper.get(userInfo
 						.getAz_user_id());
@@ -77,7 +82,6 @@ public class SmsExportService {
 					if (modelInfo != null) {
 						exportTask.setModelInfo(modelInfo);
 						resultMsg = ControlTask.startTask(exportTask);
-						System.out.println(resultMsg.getMsg());
 						if (resultMsg.isSuccess()) {
 							taskInfo.setTask_id(taskId);
 							taskInfo.setUser_id(userInfo.getUser_id());

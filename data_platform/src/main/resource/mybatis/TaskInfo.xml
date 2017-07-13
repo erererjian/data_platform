@@ -97,4 +97,10 @@
 		select * from task_info where task_id = #{taskId}
 	</select>
 	
+	<!-- 查找数据库未完成的任务 -->
+	<select id="getNotFinishTasks" resultType="com.wlwx.model.TaskInfo">
+		select * from task_info where task_status = 1 or task_status = 3
+		order by task_status DESC, priority ASC, create_time ASC 
+	</select>
+	
 </mapper>

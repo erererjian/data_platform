@@ -119,7 +119,7 @@ public class SmsExportController {
 						ResultMsg rm = ControlTask.cancelTask(taskId);
 						
 						if (rm.isSuccess()) {//取消任务成功
-							taskService.update(taskInfo);// 修改任务状态
+							taskService.updateTask(taskInfo);// 修改任务状态
 							result.put("success", true);
 							result.put("message", "取消任务成功");
 						} else {//取消任务失败

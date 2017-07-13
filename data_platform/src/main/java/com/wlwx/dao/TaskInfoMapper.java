@@ -36,4 +36,11 @@ public interface TaskInfoMapper {
 	 * @return
 	 */
 	public TaskInfo getById(String taskId);
+
+	/**
+	 * 查找数据库未完成的任务
+	 * @date 2017年7月13日 下午4:29:34
+	 * @return
+	 */
+	public List<TaskInfo> getNotFinishTasks();
 }

@@ -13,4 +13,12 @@
 			custom_source = #{custom_source}
 	</select>
 	
+	<select id="getById" resultType="com.wlwx.model.UserInfo" parameterType="string">
+		select 
+			* 
+		from 
+			user_info 
+		where 
+			user_id = #{userId}
+	</select>
 </mapper>

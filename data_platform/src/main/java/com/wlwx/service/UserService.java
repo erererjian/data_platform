@@ -5,7 +5,9 @@ import com.alibaba.fastjson.TypeReference;
 import com.wlwx.back.util.AesUtil;
 import com.wlwx.back.util.MD5Util;
 import com.wlwx.back.util.ResultMsg;
+import com.wlwx.dao.AzUserInfoMapper;
 import com.wlwx.dao.UserInfoMapper;
+import com.wlwx.model.AzUserInfo;
 import com.wlwx.model.UserInfo;
 
 import java.util.HashMap;
@@ -15,12 +17,34 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service("userService")
 public class UserService {
 	private static final Logger LOGGER = Logger.getLogger(UserService.class);
 
 	@Autowired
 	private UserInfoMapper userInfoMapper;
+	@Autowired
+	private AzUserInfoMapper azUserInfoMapper;
+	
+	/**
+	 * 根据用户ID获取用户信息
+	 * @date 2017年7月13日 下午4:46:06
+	 * @param UserId
+	 * @return
+	 */
+	public UserInfo getById(String UserId){
+		return userInfoMapper.getById(UserId);
+	}
+	
+	/**
+	 * 获取az用户
+	 * @date 2017年7月13日 下午4:42:23
+	 * @param azUserId
+	 * @return
+	 */
+	public AzUserInfo getAzUser(String azUserId){
+		return azUserInfoMapper.get(azUserId);
+	}
 
 	/**
 	 * 验证用户信息

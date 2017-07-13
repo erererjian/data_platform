@@ -57,6 +57,7 @@ public class TaskQueue {
 		if (getNewTaskSize() > 0) {
 			Task task = queue.get(0);
 			task.setState(TaskInfo.RUNNING);
+			task.setNew(true);
 			queue.add(queue.size() - 1, queue.remove(0));
 			return task;
 		}
@@ -86,7 +87,8 @@ public class TaskQueue {
 
 		while (it.hasNext()) {
 			Task task = (Task) it.next();
-			if (task.state == TaskInfo.NEW) {
+			if (task.state == TaskInfo.NEW || 
+					(task.state == TaskInfo.RUNNING && task.getExec_id() >= 0 && !task.isNew())) {//正在运行，且有执行ID,不是新任务的也是属于新任务。
 				runningNum++;
 			}
 		}

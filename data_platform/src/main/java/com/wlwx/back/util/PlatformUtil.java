@@ -2,6 +2,7 @@ package com.wlwx.back.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.wlwx.azkaban.AzkabanUtil;
 import com.wlwx.back.system.SystemInit;
 import com.wlwx.model.AzUserInfo;
@@ -57,6 +58,17 @@ public class PlatformUtil {
 	 */
 	public static String mapToJson(Map<String, Object> map) {
 		return JSON.toJSONString(map);
+	}
+	
+	/**
+	 * 将json串转map
+	 * @date 2017年7月13日 下午4:35:00
+	 * @param json
+	 * @return
+	 */
+	public static Map<String, Object> jsonToMap(String json){
+		return JSON.parseObject(
+				json,new TypeReference<Map<String, Object>>(){} );
 	}
 
 	/**
