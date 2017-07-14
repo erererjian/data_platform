@@ -26,7 +26,7 @@ public class ExportTask extends Task {
 	
 	public static final Logger LOGGER = Logger.getLogger(ExportTask.class);
 	
-	public static final String FILE_URL = "filtPath";
+	public static final String FILE_URL = "filePath";
 	
 	private TaskService taskService;
 	private String msg = "";
