@@ -73,6 +73,7 @@ public class SmsExportController {
 				if (resMsg.isSuccess()) {
 					result.put("success", true);
 					result.put("message", "创建任务成功");
+					result.put("data", resMsg.getObj().toString());//返回任务ID
 				} else {
 					result.put("success", false);
 					result.put("message", resMsg.getMsg());

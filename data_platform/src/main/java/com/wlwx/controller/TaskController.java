@@ -58,7 +58,7 @@ public class TaskController {
 				PageInfo<TaskInfo> pageInfo = taskService.listTasks(map);
 				result.put("success", true);
 				result.put("message", "获取任务列表成功");
-				result.put("pageInfo", pageInfo);
+				result.put("data", pageInfo);
 			} else {
 				result.put("success", false);
 				result.put("message", resultMsg.getMsg());

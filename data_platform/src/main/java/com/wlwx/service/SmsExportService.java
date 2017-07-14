@@ -91,6 +91,9 @@ public class SmsExportService {
 							taskInfo.setTask_param(taskParam);
 
 							taskInfoMapper.insertTask(taskInfo);
+							resultMsg = new ResultMsg(true , "创建任务成功", taskId);
+						} else {
+							resultMsg = new ResultMsg(false, resultMsg.getMsg());
 						}
 					} else {
 						resultMsg = new ResultMsg(false, "模板信息不存在");
