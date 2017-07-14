@@ -54,6 +54,12 @@ public class SmsExportService {
 
 				String modelId = map.get("model_id").toString();
 				map.remove("model_id");
+				
+				for (String key : map.keySet()) {
+					if (key.indexOf("time") > 0) { //特殊处理 如果是时间类型，需要添加单引号
+						map.put(key, "'" + map.get(key).toString() + "'");
+					}
+				}
 
 				String taskParam = PlatformUtil.mapToJson(map);
 				map.put("user_id", userInfo.getUser_id());

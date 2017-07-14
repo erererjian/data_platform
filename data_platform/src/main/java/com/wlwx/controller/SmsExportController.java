@@ -197,6 +197,7 @@ public class SmsExportController {
 				result.put("message", resultMsg.getMsg());
 			}
 		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
 			result.put("success", false);
 			result.put("message", "获取任务详情失败");
 		}

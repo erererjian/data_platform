@@ -1,8 +1,6 @@
 package com.wlwx.back.util;
 
-import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
@@ -10,20 +8,24 @@ public class MD5Util {
 	private static final String HEX_NUMS_STR = "0123456789ABCDEF";
 	private static final Integer SALT_LENGTH = Integer.valueOf(12);
 
+	private MD5Util(){
+		super();
+	}
+	
 	public static byte[] hexStringToByte(String hex) {
 		int len = hex.length() / 2;
 		byte[] result = new byte[len];
 		char[] hexChars = hex.toCharArray();
 		for (int i = 0; i < len; i++) {
 			int pos = i * 2;
-			result[i] = ((byte) (HEX_NUMS_STR.indexOf(hexChars[pos]) << 4 | HEX_NUMS_STR
-					.indexOf(hexChars[(pos + 1)])));
+			result[i] = (byte) (HEX_NUMS_STR.indexOf(hexChars[pos]) << 4 | HEX_NUMS_STR
+					.indexOf(hexChars[(pos + 1)]));
 		}
 		return result;
 	}
 
 	public static String byteToHexString(byte[] salt) {
-		StringBuffer hexString = new StringBuffer();
+		StringBuilder hexString = new StringBuilder();
 		for (int i = 0; i < salt.length; i++) {
 			String hex = Integer.toHexString(salt[i] & 0xFF);
 			if (hex.length() == 1) {
@@ -35,7 +37,7 @@ public class MD5Util {
 	}
 
 	public static boolean validPasswd(String passwd, String dbPasswd)
-			throws NoSuchAlgorithmException, UnsupportedEncodingException {
+			throws Exception {
 		byte[] pwIndb = hexStringToByte(dbPasswd);
 
 		byte[] salt = new byte[SALT_LENGTH.intValue()];
@@ -59,8 +61,8 @@ public class MD5Util {
 	}
 
 	public static String getEncryptedPwd(String passwd)
-			throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		byte[] pwd = null;
+			throws Exception {
+		byte[] pwd;
 		SecureRandom sc = new SecureRandom();
 		byte[] salt = new byte[SALT_LENGTH.intValue()];
 		sc.nextBytes(salt);
@@ -76,8 +78,4 @@ public class MD5Util {
 		return byteToHexString(pwd);
 	}
 
-	public static void main(String[] args) throws NoSuchAlgorithmException,
-			UnsupportedEncodingException {
-		System.out.println(getEncryptedPwd("123456"));
-	}
 }

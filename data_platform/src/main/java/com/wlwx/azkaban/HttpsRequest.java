@@ -1,7 +1,5 @@
 package com.wlwx.azkaban;
 
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -29,6 +27,10 @@ public class HttpsRequest {
 	
 	private static final Logger LOGGER = Logger.getLogger(HttpsRequest.class);
 	
+	private HttpsRequest(){
+		super();
+	}
+	
 	static {
 		disableSslVerification();
 	}
@@ -36,14 +38,15 @@ public class HttpsRequest {
 	private static void disableSslVerification() {
 		try {
 			TrustManager[] trustAllCerts = { new X509TrustManager() {
+				@Override
 				public X509Certificate[] getAcceptedIssuers() {
 					return null;
 				}
-
+				@Override
 				public void checkServerTrusted(X509Certificate[] arg0,
 						String arg1) throws CertificateException {
 				}
-
+				@Override
 				public void checkClientTrusted(X509Certificate[] arg0,
 						String arg1) throws CertificateException {
 				}
@@ -54,14 +57,13 @@ public class HttpsRequest {
 					.setDefaultSSLSocketFactory(sc.getSocketFactory());
 
 			HostnameVerifier allHostsValid = new HostnameVerifier() {
+				@Override
 				public boolean verify(String hostname, SSLSession session) {
 					return true;
 				}
 			};
 			HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
-		} catch (NoSuchAlgorithmException e) {
-			LOGGER.error(e.getMessage(), e);
-		} catch (KeyManagementException e) {
+		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}
 	}

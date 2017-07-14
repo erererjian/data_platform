@@ -1,16 +1,10 @@
 package com.wlwx.back.util;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -25,14 +19,8 @@ public class AesUtil {
 	private static final String ENCODING = "UTF-8";
 	private static final String KEY = "wlwx_008@";
 
-	public AesUtil() {
+	private AesUtil() {
 		super();
-	}
-
-	public static void main(String[] args) {
-//		String data = "123456";
-//		System.out.println(encryptAES(data));
-//		System.out.println(decrypt(encryptAES(data)));
 	}
 
 	public static String encryptAES(String content, String password) {
@@ -108,18 +96,8 @@ public class AesUtil {
 			byte[] byteContent = content.getBytes(ENCODING);
 			cipher.init(1, key);
 			return cipher.doFinal(byteContent);
-		} catch (NoSuchAlgorithmException e) {
-			LOGGER.info(e);
-		} catch (NoSuchPaddingException e) {
-			LOGGER.info(e);
-		} catch (InvalidKeyException e) {
-			LOGGER.info(e);
-		} catch (UnsupportedEncodingException e) {
-			LOGGER.info(e);
-		} catch (IllegalBlockSizeException e) {
-			LOGGER.info(e);
-		} catch (BadPaddingException e) {
-			LOGGER.info(e);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
 		}
 		return null;
 	}
@@ -138,22 +116,14 @@ public class AesUtil {
 			Cipher cipher = Cipher.getInstance("AES");
 			cipher.init(2, key);
 			return cipher.doFinal(content);
-		} catch (NoSuchAlgorithmException e) {
-			LOGGER.info(e);
-		} catch (NoSuchPaddingException e) {
-			LOGGER.info(e);
-		} catch (InvalidKeyException e) {
-			LOGGER.info(e);
-		} catch (IllegalBlockSizeException e) {
-			LOGGER.info(e);
-		} catch (BadPaddingException e) {
-			LOGGER.info(e);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
 		}
 		return null;
 	}
 
 	public static String parseByte2HexStr(byte[] buf) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < buf.length; i++) {
 			String hex = Integer.toHexString(buf[i] & 0xFF);
 			if (hex.length() == 1) {
@@ -166,13 +136,13 @@ public class AesUtil {
 
 	public static byte[] parseHexStr2Byte(String hexStr) {
 		if (hexStr.length() < 1)
-			return null;
+			return new byte[0];
 		byte[] result = new byte[hexStr.length() / 2];
 		for (int i = 0; i < hexStr.length() / 2; i++) {
 			int high = Integer.parseInt(hexStr.substring(i * 2, i * 2 + 1), 16);
 			int low = Integer.parseInt(hexStr.substring(i * 2 + 1, i * 2 + 2),
 					16);
-			result[i] = ((byte) (high * 16 + low));
+			result[i] = (byte) (high * 16 + low);
 		}
 		return result;
 	}

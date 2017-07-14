@@ -18,6 +18,9 @@ import org.apache.log4j.Logger;
 public class ControlTask {
 	public static final Logger LOGGER = Logger.getLogger(ControlTask.class);
 
+	private ControlTask(){
+		super();
+	}
 	/**
 	 * 开始任务
 	 * @date 2017年7月11日 下午4:54:58
@@ -26,7 +29,7 @@ public class ControlTask {
 	 */
 	public static ResultMsg startTask(ExportTask exportTask) {
 		int taskFlag = curTask(exportTask);
-		ResultMsg resultMsg = null;
+		ResultMsg resultMsg;
 		if (taskFlag == -1)
 			resultMsg = new ResultMsg(true, "添加成功，马上执行");
 		else if (taskFlag == -2)
@@ -37,8 +40,8 @@ public class ControlTask {
 	}
 
 	public static int curTask(ExportTask et) {
-		int startStatus = 0;
-		ExportTask exportTask = null;
+		int startStatus;
+		ExportTask exportTask;
 		exportTask = getTask(et.getTask_id());
 		if (exportTask != null) {
 			return exportTask.getState();
@@ -101,7 +104,7 @@ public class ControlTask {
 	 * @return
 	 */
 	public static ExportTask getTask(String taskId) {
-		ExportTask exportTask = null;
+		ExportTask exportTask;
 		exportTask = (ExportTask) SystemInit.taskService.getTaskQueue()
 			.getTaskById(taskId);
 		return exportTask;
