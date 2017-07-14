@@ -1,7 +1,10 @@
 package com.wlwx.azkaban;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wlwx.back.util.PlatformUtil;
+
 import java.util.Map;
+
 import org.springframework.http.HttpMethod;
 
 /**
@@ -10,9 +13,9 @@ import org.springframework.http.HttpMethod;
  * @date 2017年7月11日 下午4:46:50
  */
 public class AzkabanUtil {
-	public static final String URL = "https://172.20.0.51:8443/";
-	public static final String MANAGER_URL = "https://172.20.0.51:8443/manager";
-	public static final String EXECUTOR_URL = "https://172.20.0.51:8443/executor";
+	public static final String URL = "url";
+	public static final String MANAGER_URL = "managerUrl";
+	public static final String EXECUTOR_URL = "executorUrl";
 
 	public static final String PREPARING  = "PREPARING";   //准备
 	public static final String RUNNING    = "RUNNING";     //运行
@@ -31,7 +34,7 @@ public class AzkabanUtil {
 	 * @return
 	 */
 	public static JSONObject actionLogin(String username, String password) {
-		String result = HttpsRequest.httpsRequest(URL, "action=login&username="
+		String result = HttpsRequest.httpsRequest(PlatformUtil.getProperties(URL), "action=login&username="
 				+ username + "&password=" + password, HttpMethod.POST);
 		return JSONObject.parseObject(result);
 	}
@@ -46,7 +49,7 @@ public class AzkabanUtil {
 	 */
 	public static JSONObject createProject(String sessionId, String name,
 			String description) {
-		String result = HttpsRequest.httpsRequest(MANAGER_URL,
+		String result = HttpsRequest.httpsRequest(PlatformUtil.getProperties(MANAGER_URL),
 				"action=create&session.id=" + sessionId + "&name=" + name
 						+ "&description=" + description, HttpMethod.POST);
 		return JSONObject.parseObject(result);
@@ -60,7 +63,7 @@ public class AzkabanUtil {
 	 * @return
 	 */
 	public static String deleteProject(String sessionId, String project) {
-		return HttpsRequest.httpsRequest(MANAGER_URL
+		return HttpsRequest.httpsRequest(PlatformUtil.getProperties(MANAGER_URL)
 				+ "?delete=true&session.id=" + sessionId + "&project="
 				+ project, "", HttpMethod.GET);
 	}
@@ -73,7 +76,7 @@ public class AzkabanUtil {
 	 * @return
 	 */
 	public static JSONObject fetchProjectFlows(String sessionId, String project) {
-		String result = HttpsRequest.httpsRequest(MANAGER_URL
+		String result = HttpsRequest.httpsRequest(PlatformUtil.getProperties(MANAGER_URL)
 				+ "?ajax=fetchprojectflows&session.id=" + sessionId
 				+ "&project=" + project, "", HttpMethod.GET);
 		return JSONObject.parseObject(result);
@@ -89,7 +92,7 @@ public class AzkabanUtil {
 	 */
 	public static JSONObject fetchFlowGraph(String sessionId, String project,
 			String flow) {
-		String result = HttpsRequest.httpsRequest(MANAGER_URL
+		String result = HttpsRequest.httpsRequest(PlatformUtil.getProperties(MANAGER_URL)
 				+ "?ajax=fetchflowgraph&session.id=" + sessionId + "&project="
 				+ project + "&flow=" + flow, "", HttpMethod.GET);
 		return JSONObject.parseObject(result);
@@ -107,7 +110,7 @@ public class AzkabanUtil {
 	 */
 	public static JSONObject fetchFlowExecutions(String sessionId,
 			String project, String flow, String start, String length) {
-		String result = HttpsRequest.httpsRequest(MANAGER_URL
+		String result = HttpsRequest.httpsRequest(PlatformUtil.getProperties(MANAGER_URL)
 				+ "?ajax=fetchFlowExecutions&session.id=" + sessionId
 				+ "&project=" + project + "&flow=" + flow + "&start=" + start
 				+ "&length=" + length, "", HttpMethod.GET);
@@ -124,7 +127,7 @@ public class AzkabanUtil {
 	 */
 	public static JSONObject getRunningExecIds(String sessionId,
 			String project, String flow) {
-		String result = HttpsRequest.httpsRequest(EXECUTOR_URL
+		String result = HttpsRequest.httpsRequest(PlatformUtil.getProperties(EXECUTOR_URL)
 				+ "?ajax=getRunning&session.id=" + sessionId + "&project="
 				+ project + "&flow=" + flow, "", HttpMethod.GET);
 		return JSONObject.parseObject(result);
@@ -146,7 +149,7 @@ public class AzkabanUtil {
 			paramStr = paramStr + "&flowOverride[" + key + "]="
 					+ params.get(key);
 		}
-		String result = HttpsRequest.httpsRequest(EXECUTOR_URL
+		String result = HttpsRequest.httpsRequest(PlatformUtil.getProperties(EXECUTOR_URL)
 				+ "?ajax=executeFlow&session.id=" + sessionId + "&project="
 				+ project + "&flow=" + flow + paramStr, "", HttpMethod.GET);
 		return JSONObject.parseObject(result);
@@ -160,7 +163,7 @@ public class AzkabanUtil {
 	 * @return
 	 */
 	public static JSONObject cancelFlow(String sessionId, String execid) {
-		String result = HttpsRequest.httpsRequest(EXECUTOR_URL
+		String result = HttpsRequest.httpsRequest(PlatformUtil.getProperties(EXECUTOR_URL)
 				+ "?ajax=cancelFlow&session.id=" + sessionId + "&execid="
 				+ execid, "", HttpMethod.GET);
 		return JSONObject.parseObject(result);
@@ -174,7 +177,7 @@ public class AzkabanUtil {
 	 * @return
 	 */
 	public static JSONObject pauseFlow(String sessionId, String execid) {
-		String result = HttpsRequest.httpsRequest(EXECUTOR_URL
+		String result = HttpsRequest.httpsRequest(PlatformUtil.getProperties(EXECUTOR_URL)
 				+ "?ajax=pauseFlow&session.id=" + sessionId + "&execid="
 				+ execid, "", HttpMethod.GET);
 		return JSONObject.parseObject(result);
@@ -188,7 +191,7 @@ public class AzkabanUtil {
 	 * @return
 	 */
 	public static JSONObject resumeFlow(String sessionId, String execid) {
-		String result = HttpsRequest.httpsRequest(EXECUTOR_URL
+		String result = HttpsRequest.httpsRequest(PlatformUtil.getProperties(EXECUTOR_URL)
 				+ "?ajax=resumeFlow&session.id=" + sessionId + "&execid="
 				+ execid, "", HttpMethod.GET);
 		return JSONObject.parseObject(result);
@@ -202,7 +205,7 @@ public class AzkabanUtil {
 	 * @return
 	 */
 	public static JSONObject fetchExecFlow(String sessionId, String execid) {
-		String result = HttpsRequest.httpsRequest(EXECUTOR_URL
+		String result = HttpsRequest.httpsRequest(PlatformUtil.getProperties(EXECUTOR_URL)
 				+ "?ajax=fetchexecflow&session.id=" + sessionId + "&execid="
 				+ execid, "", HttpMethod.GET);
 		return JSONObject.parseObject(result);

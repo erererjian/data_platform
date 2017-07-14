@@ -26,6 +26,8 @@ public class ExportTask extends Task {
 	
 	public static final Logger LOGGER = Logger.getLogger(ExportTask.class);
 	
+	public static final String FILE_URL = "filtPath";
+	
 	private TaskService taskService;
 	private String msg = "";
 
@@ -130,7 +132,7 @@ public class ExportTask extends Task {
 						} else if ("CANCELLED".equals(status) || "KILLED".equals(status)) {//取消
 							params.put("task_status", TaskInfo.TERMINATED);
 						} else if ("SUCCEEDED".equals(status)) {//成功
-							String filePath = PlatformUtil.FILE_URL
+							String filePath = PlatformUtil.getProperties(FILE_URL)
 									+ File.separator + getUser_id()
 									+ File.separator + modelInfo.getModel_name()
 									+ File.separator

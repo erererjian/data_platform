@@ -7,21 +7,37 @@ import com.wlwx.azkaban.AzkabanUtil;
 import com.wlwx.back.system.SystemInit;
 import com.wlwx.model.AzUserInfo;
 
-import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.Properties;
+
+import org.apache.log4j.Logger;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 /**
  * 平台工具类
- * @author zjj
  * @date 2017年7月12日 上午9:07:27
  */
 public class PlatformUtil {
+	public static final Logger LOGGER = Logger.getLogger(PlatformUtil.class);
 	
-	public static final String FILE_URL = File.separator + "home"
-			+ File.separator + "zhengjj";
-
+	/**
+	 * 获取属性文件中的值
+	 * @date 2017年7月14日 下午4:31:00
+	 * @return
+	 */
+	public static String getProperties(String key){
+		Properties props = new Properties();
+		try {
+			props = PropertiesLoaderUtils.loadAllProperties("platform.properties");
+		} catch (IOException e) {
+			LOGGER.error(e.getMessage(), e);
+		}
+		return props.getProperty(key);
+	}
+	
 	/**
 	 * 任务状态转换
 	 * @date 2017年7月12日 上午10:39:10

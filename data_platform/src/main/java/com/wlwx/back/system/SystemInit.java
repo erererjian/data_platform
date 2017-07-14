@@ -38,7 +38,7 @@ public class SystemInit {
 	public static synchronized void start() {
 		try {
 			//初始化任务线程
-			taskService = new ThreadPoolService(3);
+			taskService = new ThreadPoolService(Integer.parseInt(PlatformUtil.getProperties("taskThreadNum")));
 			//恢复未完成任务
 			resumeTasks();
 			//启动线程
