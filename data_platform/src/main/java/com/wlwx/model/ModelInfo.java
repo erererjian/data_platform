@@ -6,6 +6,15 @@ public class ModelInfo {
 	private String az_user_id;
 	private String az_project;
 	private String az_flow_id;
+	private String model_param;
+	
+	public String getModel_param() {
+		return model_param;
+	}
+
+	public void setModel_param(String model_param) {
+		this.model_param = model_param;
+	}
 
 	public String getModel_id() {
 		return this.model_id;

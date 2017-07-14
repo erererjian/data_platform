@@ -1,11 +1,13 @@
 package com.wlwx.back.util;
 
 public class ResultMsg {
+	
 	private boolean success;
 	private String msg;
 	private Object obj;
 
 	public ResultMsg() {
+		super();
 	}
 
 	public ResultMsg(boolean success, String msg) {

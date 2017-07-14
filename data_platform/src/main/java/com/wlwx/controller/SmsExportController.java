@@ -7,6 +7,7 @@ import com.wlwx.back.task.ControlTask;
 import com.wlwx.back.task.Task;
 import com.wlwx.back.util.PlatformUtil;
 import com.wlwx.back.util.ResultMsg;
+import com.wlwx.model.ModelInfo;
 import com.wlwx.model.TaskInfo;
 import com.wlwx.service.SmsExportService;
 import com.wlwx.service.TaskService;
@@ -168,7 +169,25 @@ public class SmsExportController {
 
 			if (resultMsg.isSuccess()) {
 				String taskId = map.get("task_id").toString();
-				TaskInfo taskInfo = taskService.getById(taskId);
+				
+				TaskInfo taskInfo = taskService.getById(taskId);//查询任务信息
+				String modelId = taskInfo.getModel_id();//获取模板ID
+				ModelInfo modelInfo = taskService.getModelById(modelId);
+				
+				//进行参数解析
+				Map<String, Object> taskParam = new HashMap<>();
+				
+				Map<String, Object> taskParamMap = PlatformUtil.jsonToMap(taskInfo.getTask_param());
+				Map<String, Object> modelParamMap = PlatformUtil.jsonToMap(modelInfo.getModel_param());
+				for (String taskParamkey : taskParamMap.keySet()) {
+					for (String modelParamKey : modelParamMap.keySet()) {
+						if (taskParamkey.equals(modelParamKey)) {
+							taskParam.put(modelParamMap.get(modelParamKey).toString(), taskParamMap.get(taskParamkey));
+						}
+					}
+				}
+				taskInfo.setTask_param(PlatformUtil.mapToJson(taskParam));
+				
 				result.put("success", true);
 				result.put("message", "获取任务详情成功");
 				result.put("data", taskInfo);
