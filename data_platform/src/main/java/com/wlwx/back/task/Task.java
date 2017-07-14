@@ -19,15 +19,6 @@ public abstract class Task {
 	private long exec_id;
 	private AzUserInfo azUserInfo;
 	private ModelInfo modelInfo;
-	private boolean isNew;
-
-	public boolean isNew() {
-		return isNew;
-	}
-
-	public void setNew(boolean isNew) {
-		this.isNew = isNew;
-	}
 
 	public long getExec_id() {
 		return this.exec_id;

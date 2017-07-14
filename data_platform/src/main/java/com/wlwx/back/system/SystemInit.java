@@ -37,13 +37,12 @@ public class SystemInit {
 	 */
 	public static synchronized void start() {
 		try {
-			//启动任务线程
+			//初始化任务线程
 			taskService = new ThreadPoolService(3);
-			taskService.start();
-			
 			//恢复未完成任务
 			resumeTasks();
-			
+			//启动线程
+			taskService.start();
 		} catch (Exception e) {
 			LOGGER.error("SystemInit start() error", e);
 		}
@@ -87,13 +86,11 @@ public class SystemInit {
 			exportTask.setStart_time(taskInfo.getStart_time());
 			exportTask.setPriority(taskInfo.getPriority());
 			exportTask.setModel_id(taskInfo.getModel_id());
-			exportTask.setState(taskInfo.getTask_status());
+			exportTask.setState(TaskInfo.NEW);
 			exportTask.setTaskService(tService);
 			exportTask.setExec_id(taskInfo.getExec_id());
-			exportTask.setNew(false);
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-			System.out.println("创建时间" + sdf.format(taskInfo.getCreate_time()));
 			Map<String, Object> taskParam = PlatformUtil.jsonToMap(taskInfo.getTask_param());
 			taskParam.put("user_id", userInfo.getUser_id());
 			taskParam.put("user_source", userInfo.getCustom_source());

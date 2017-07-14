@@ -201,8 +201,8 @@ public class SmsExportController {
 			sb.append("任务状态：" + (((Task) queue.get(i)).getState() == 1 ? "新建" : "运行")+ " | ");
 			sb.append("优先级：" + ((Task) queue.get(i)).getPriority() + " | ");
 			sb.append("创建时间：" + sdf.format(((Task) queue.get(i)).getCreate_time()) + " | ");
-			sb.append("模板ID：" + ((Task) queue.get(i)).getModel_id() + " | ");
-			sb.append("用户ID：" + ((Task) queue.get(i)).getUser_id() + "\n");
+			sb.append("用户ID" + ((Task) queue.get(i)).getUser_id() + " | ");
+			sb.append("模板ID：" + ((Task) queue.get(i)).getModel_id() + "\n");
 		}
 		return sb.toString();
 	}

@@ -71,7 +71,6 @@ public class SmsExportService {
 				exportTask.setState(TaskInfo.NEW);
 				exportTask.setTask_param(map);
 				exportTask.setTaskService(taskService);
-				exportTask.setNew(true);//用于区分是否是用户添加的
 
 				AzUserInfo azUserInfo = azUserInfoMapper.get(userInfo
 						.getAz_user_id());

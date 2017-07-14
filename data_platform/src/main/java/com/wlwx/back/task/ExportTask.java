@@ -57,7 +57,6 @@ public class ExportTask extends Task {
 			if (getExec_id() <= 0) {//执行ID小于0 说明是已经执行，因特殊原因重新入队，不予重新发送任务
 				boolean success = false;
 				for (int i = 0; i < 3; i++) {//尝试三次
-					System.out.println("===================================== i = "+ i + "======================================");
 					Object sessionObj = SystemInit.sessionMap.get(getUser_id());
 					String sessionId = sessionObj != null ? sessionObj.toString(): ""; //获取sessionID
 
@@ -85,7 +84,6 @@ public class ExportTask extends Task {
 					}
 				}
 				if (!success) {
-					System.out.println("任务失败");
 					//任务失败，修改任务状态
 					Map<String, Object> params = new HashMap<>();
 					params.put("task_id", this.getTask_id());
