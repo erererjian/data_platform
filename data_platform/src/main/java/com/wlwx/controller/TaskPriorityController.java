@@ -135,7 +135,7 @@ public class TaskPriorityController {
 						result.put("message", "调整任务优先级成功");
 					} else {
 						result.put("success", false);
-						result.put("message", "任务已经正在运行或者完成，不得调整。");
+						result.put("message", "任务已经正在运行或者完成，不得调整");
 					}
 				} else {
 					result.put("success", false);
