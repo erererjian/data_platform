@@ -2,6 +2,7 @@ package com.wlwx.back.system;
 
 import com.wlwx.application.SpringContextUtil;
 import com.wlwx.azkaban.AzkabanUtil;
+import com.wlwx.back.quartz.QuartzScheduling;
 import com.wlwx.back.task.ControlTask;
 import com.wlwx.back.task.ExportTask;
 import com.wlwx.back.task.ThreadPoolService;
@@ -43,6 +44,8 @@ public class SystemInit {
 			resumeTasks();
 			//启动线程
 			taskService.start();
+			//启动定时删除历史数据任务
+			QuartzScheduling.delHistoryDataOnTime();
 		} catch (Exception e) {
 			LOGGER.error("SystemInit start() error", e);
 		}

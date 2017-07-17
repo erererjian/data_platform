@@ -92,7 +92,6 @@ public class TaskService {
 	
 	/**
 	 * 修改任务
-	 * @authod zjj
 	 * @date 2017年7月13日 下午4:37:06
 	 */
 	public void update(Map<String, Object> params){
@@ -106,5 +105,22 @@ public class TaskService {
 	 */
 	public List<TaskInfo> getNotFinishTasks() {
 		return taskInfoMapper.getNotFinishTasks();
+	}
+
+	/**
+	 * 定时删除历史数据
+	 * @date 2017年7月17日 上午10:22:05
+	 */
+	public int delHistoryData() {
+		return taskInfoMapper.delHistoryData();
+	}
+
+	/**
+	 * 获取需要删除历史数据任务ID
+	 * @date 2017年7月17日 上午11:54:13
+	 * @return
+	 */
+	public List<String> getDelTaskIds() {
+		return taskInfoMapper.getDelTaskIds();
 	}
 }

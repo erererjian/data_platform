@@ -103,4 +103,19 @@
 		order by task_status DESC, priority ASC, create_time ASC 
 	</select>
 	
+	<!-- 定时删除历史数据 -->
+	<delete id="delHistoryData" >
+		delete from 
+			task_info
+		where 
+			create_time &lt; ADD_MONTHS(TO_DATE(TO_CHAR(sysdate,'YYYY-MM-DD'), 'YYYY-MM-DD'), -1)
+	</delete>
+	
+	<!-- 获取需要删除历史数据任务ID -->
+	<select id="getDelTaskIds" resultType="string">
+		select task_id from 
+			task_info
+		where 
+			create_time &lt; ADD_MONTHS(TO_DATE(TO_CHAR(sysdate,'YYYY-MM-DD'), 'YYYY-MM-DD'), -1)
+	</select>
 </mapper>

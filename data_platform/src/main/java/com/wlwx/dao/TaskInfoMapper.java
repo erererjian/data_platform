@@ -43,4 +43,17 @@ public interface TaskInfoMapper {
 	 * @return
 	 */
 	public List<TaskInfo> getNotFinishTasks();
+
+	/**
+	 * 定时删除历史数据
+	 * @date 2017年7月17日 上午10:25:33
+	 */
+	public int delHistoryData();
+
+	/**
+	 * 获取需要删除历史数据任务ID
+	 * @date 2017年7月17日 上午11:54:35
+	 * @return
+	 */
+	public List<String> getDelTaskIds();
 }
