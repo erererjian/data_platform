@@ -1,6 +1,5 @@
 package com.wlwx.back.util;
 
-import java.io.IOException;
 import java.security.SecureRandom;
 
 import javax.crypto.Cipher;
@@ -10,120 +9,109 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.log4j.Logger;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
-
+/**
+ * @author zjj
+ * @date 2017年7月18日 上午11:32:43
+ */
 public class AesUtil {
+
 	private static final Logger LOGGER = Logger.getLogger(AesUtil.class);
-	
-	private static final String ENCODING = "UTF-8";
+
 	private static final String KEY = "wlwx_008@";
-
-	private AesUtil() {
-		super();
+	
+	public static void main(String[] args) {
+		String content = "123456";
+		System.out.println("加密前：" + content);
+		System.out.println("加密后：" + encrypt(content));
+		System.out.println("解密后：" + decrypt(encrypt(content)));
 	}
-
-	public static String encryptAES(String content, String password) {
-		byte[] encryptResult = encrypt(content, password);
-		String encryptResultStr = parseByte2HexStr(encryptResult);
-
-		encryptResultStr = ebotongEncrypto(encryptResultStr);
-		return encryptResultStr;
-	}
-
-	public static String encryptAES(String content) {
-		byte[] encryptResult = encrypt(content, KEY);
-		String encryptResultStr = parseByte2HexStr(encryptResult);
-
-		encryptResultStr = ebotongEncrypto(encryptResultStr);
-		return encryptResultStr;
-	}
-
-	public static String decrypt(String encryptResultStr, String password) {
-		String decrpt = ebotongDecrypto(encryptResultStr);
-		byte[] decryptFrom = parseHexStr2Byte(decrpt);
-		byte[] decryptResult = decrypt(decryptFrom, password);
-		return new String(decryptResult);
-	}
-
-	public static String decrypt(String encryptResultStr) {
-		String decrpt = ebotongDecrypto(encryptResultStr);
-		byte[] decryptFrom = parseHexStr2Byte(decrpt);
+	
+	/**
+	 * 解密
+	 * @date 2017年7月18日 上午11:42:44
+	 * @param content
+	 * 			需要解密的内容
+	 * @return
+	 */
+	public static String decrypt(String content) {
+		byte[] decryptFrom = parseHexStr2Byte(content);
 		byte[] decryptResult = decrypt(decryptFrom, KEY);
 		return new String(decryptResult);
 	}
-
-	public static String ebotongEncrypto(String str) {
-		BASE64Encoder base64encoder = new BASE64Encoder();
-		String result = str;
-		if ((str != null) && (str.length() > 0)) {
-			try {
-				byte[] encodeByte = str.getBytes(ENCODING);
-				result = base64encoder.encode(encodeByte);
-			} catch (Exception e) {
-				LOGGER.info(e);
-			}
-		}
-		if (str != null) 
-			return result.replaceAll("\r\n", "").replaceAll("\r", "").replaceAll("\n", "");
-		else 
-			return str;
+	
+	/**
+	 * 加密
+	 * @date 2017年7月18日 上午11:41:01
+	 * @param content 
+	 * 			需要加密的内容
+	 * @return
+	 */
+	public static String encrypt(String content) {
+		byte[] encryptResult = encrypt(content, KEY);
+		return parseByte2HexStr(encryptResult);
 	}
-
-	public static String ebotongDecrypto(String str) {
-		BASE64Decoder base64decoder = new BASE64Decoder();
-		try {
-			byte[] encodeByte = base64decoder.decodeBuffer(str);
-			return new String(encodeByte);
-		} catch (IOException e) {
-			LOGGER.info(e);
-		}
-		return str;
-	}
-
+	
+	/**
+	 * 加密
+	 * 
+	 * @param content
+	 *            需要加密的内容
+	 * @param password
+	 *            加密密码
+	 * @return
+	 */
 	private static byte[] encrypt(String content, String password) {
 		try {
 			KeyGenerator kgen = KeyGenerator.getInstance("AES");
-
-			SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
-			secureRandom.setSeed(password.getBytes());
-			kgen.init(128, secureRandom);
-
+			kgen.init(128, new SecureRandom(password.getBytes()));
 			SecretKey secretKey = kgen.generateKey();
 			byte[] enCodeFormat = secretKey.getEncoded();
 			SecretKeySpec key = new SecretKeySpec(enCodeFormat, "AES");
-			Cipher cipher = Cipher.getInstance("AES");
-			byte[] byteContent = content.getBytes(ENCODING);
-			cipher.init(1, key);
-			return cipher.doFinal(byteContent);
+			Cipher cipher = Cipher.getInstance("AES");// 创建密码器
+			byte[] byteContent = content.getBytes("utf-8");
+			cipher.init(Cipher.ENCRYPT_MODE, key);// 初始化
+			byte[] result = cipher.doFinal(byteContent);
+			return result; // 加密
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}
 		return null;
 	}
 
+	/**
+	 * 解密
+	 * 
+	 * @param content
+	 *            待解密内容
+	 * @param password
+	 *            解密密钥
+	 * @return
+	 */
 	private static byte[] decrypt(byte[] content, String password) {
 		try {
 			KeyGenerator kgen = KeyGenerator.getInstance("AES");
-
-			SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
-			secureRandom.setSeed(password.getBytes());
-			kgen.init(128, secureRandom);
-
+			kgen.init(128, new SecureRandom(password.getBytes()));
 			SecretKey secretKey = kgen.generateKey();
 			byte[] enCodeFormat = secretKey.getEncoded();
 			SecretKeySpec key = new SecretKeySpec(enCodeFormat, "AES");
-			Cipher cipher = Cipher.getInstance("AES");
-			cipher.init(2, key);
-			return cipher.doFinal(content);
+			Cipher cipher = Cipher.getInstance("AES");// 创建密码器
+			cipher.init(Cipher.DECRYPT_MODE, key);// 初始化
+			byte[] result = cipher.doFinal(content);
+			return result; // 加密
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}
 		return null;
 	}
 
-	public static String parseByte2HexStr(byte[] buf) {
-		StringBuilder sb = new StringBuilder();
+	/**
+	 * 将二进制转换成16进制
+	 * 
+	 * @param buf
+	 * @return
+	 */
+	private static String parseByte2HexStr(byte buf[]) {
+		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < buf.length; i++) {
 			String hex = Integer.toHexString(buf[i] & 0xFF);
 			if (hex.length() == 1) {
@@ -134,9 +122,15 @@ public class AesUtil {
 		return sb.toString();
 	}
 
-	public static byte[] parseHexStr2Byte(String hexStr) {
+	/**
+	 * 将16进制转换为二进制
+	 * 
+	 * @param hexStr
+	 * @return
+	 */
+	private static byte[] parseHexStr2Byte(String hexStr) {
 		if (hexStr.length() < 1)
-			return new byte[0];
+			return null;
 		byte[] result = new byte[hexStr.length() / 2];
 		for (int i = 0; i < hexStr.length() / 2; i++) {
 			int high = Integer.parseInt(hexStr.substring(i * 2, i * 2 + 1), 16);
@@ -146,4 +140,5 @@ public class AesUtil {
 		}
 		return result;
 	}
+	
 }
